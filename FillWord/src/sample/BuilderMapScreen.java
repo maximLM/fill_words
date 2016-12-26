@@ -1,6 +1,7 @@
 package sample;
 
 import javafx.animation.AnimationTimer;
+import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
@@ -45,8 +46,8 @@ public class BuilderMapScreen implements LMScreen, EventHandler<KeyEvent> {
     }
 
     private int detN() {
-        int n = 0;
-        ArrayList<Integer> data = new ArrayList<Integer>(){{
+        int n = 3;
+        ArrayList<Integer> data = new ArrayList<Integer>() {{
             int i = 3;
             add(i++);
             add(i++);
@@ -55,13 +56,14 @@ public class BuilderMapScreen implements LMScreen, EventHandler<KeyEvent> {
             add(i++);
             add(i++);
         }};
-        ChoiceDialog<Integer> dialog = new ChoiceDialog<Integer>(data.get(0),data);
+        ChoiceDialog<Integer> dialog = new ChoiceDialog<Integer>(data.get(0), data);
         dialog.setTitle("Choose dimension");
         dialog.setHeaderText("Select your choice");
         Optional<Integer> result = dialog.showAndWait();
         if (result.isPresent()) {
             n = result.get();
         }
+
         return n;
     }
 
@@ -84,7 +86,7 @@ public class BuilderMapScreen implements LMScreen, EventHandler<KeyEvent> {
         }
         double width = countX(map.length);
         stage.setWidth(width);
-        stage.setHeight(countY(map.length + 1));
+        stage.setHeight(countY(map.length + 2));
         double butH = countY(map.length);
         addWord = new Button("ADD");
         addWord.setOnAction(event -> addWord());
@@ -164,7 +166,9 @@ public class BuilderMapScreen implements LMScreen, EventHandler<KeyEvent> {
     }
 
     private void back() {
+        System.out.println("What's up ???");
         Main.setLmScreen(new LevelsScreen(Main.SIZE, rootList, stage));
+        System.out.println("here again");
     }
 
 
@@ -212,6 +216,8 @@ public class BuilderMapScreen implements LMScreen, EventHandler<KeyEvent> {
             clear();
         } else if (event.getCode() == KeyCode.ENTER) {
             addWord();
+        } else if (event.getCode() == KeyCode.ESCAPE) {
+            back();
         } else if (current != null)
             inputted(current, event.getCode().toString().charAt(0));
     }

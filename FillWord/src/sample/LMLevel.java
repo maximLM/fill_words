@@ -2,7 +2,12 @@ package sample;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -25,13 +30,19 @@ public class LMLevel implements EventHandler<ActionEvent> {
         button.setText(file.getName().replace(".txt", ""));
         list.add(button);
         button.setOnAction(this);
+        button.setPrefHeight(size);
+        button.setPrefWidth(size);
+        button.setBackground((new Background(new BackgroundFill(
+                Color.BISQUE,
+                CornerRadii.EMPTY,
+                Insets.EMPTY))));
         rootList = list;
         this.stage = stage;
     }
 
     @Override
     public void handle(ActionEvent event) {
-        Main.setLmScreen(new LetterMap(src, Main.SIZE, rootList, stage));
+        Main.setLmScreen(new LetterMap(src, Main.SIZE, rootList, stage, Main.root));
     }
 
     @Override

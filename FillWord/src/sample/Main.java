@@ -11,7 +11,7 @@ public class Main extends Application {
 
     public static final String LEVELS = "Levels", EXT = ".txt";
     public static double SIZE = 300;
-    private Group root;
+    public static Group root;
     private static LMScreen lmScreen;
 
     @Override
@@ -24,7 +24,7 @@ public class Main extends Application {
         stage.setScene(new Scene(root, SIZE, SIZE));
         stage.show();
         root.requestFocus();
-        setLmScreen(new BuilderMapScreen(SIZE, root.getChildren(), stage, root));
+        setLmScreen(new LevelsScreen(SIZE, root.getChildren(), stage));
     }
 
 
@@ -35,6 +35,7 @@ public class Main extends Application {
 
     public static void setLmScreen(LMScreen newScreen) {
         if (lmScreen != null) lmScreen.clearScreen();
+        System.out.println("What is happening");
         lmScreen = newScreen;
     }
 }

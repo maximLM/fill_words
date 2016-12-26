@@ -2,8 +2,11 @@ package sample;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Group;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -11,16 +14,15 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.concurrent.ArrayBlockingQueue;
 
 /**
  * Created by Максим on 15.12.2016.
  */
-public class LetterMap implements OnLetterListener, EventHandler<ActionEvent>, LMScreen{
+public class LetterMap implements OnLetterListener, LMScreen, EventHandler<KeyEvent> {
     private static double WIDTH;
     private Stage stage;
     private Letter map[][];
-    private Button cancel;
+    private Button clear, back;
     private ArrayList<Letter> chosen;
     private Word currentWord;
     private HashSet<Word> allWords;
@@ -30,9 +32,11 @@ public class LetterMap implements OnLetterListener, EventHandler<ActionEvent>, L
     private double delta;
     private boolean failed;
     private double HEIGHT;
+    private Group root;
 
-    public LetterMap(File file, double size, List rootList, Stage stage) {
+    public LetterMap(File file, double size, List rootList, Stage stage, Group root) {
         SIZE = size;
+        this.root = root;
         this.stage = stage;
         this.rootList = rootList;
         chosen = new ArrayList<>();
@@ -44,6 +48,7 @@ public class LetterMap implements OnLetterListener, EventHandler<ActionEvent>, L
             e.printStackTrace();
             throw new RuntimeException(e);
         }
+        root.setOnKeyPressed(this);
     }
 
     private void parseFromFile(File file) throws IOException {
@@ -82,20 +87,26 @@ public class LetterMap implements OnLetterListener, EventHandler<ActionEvent>, L
             allWords.add(new Word(ls));
         }
         WIDTH = countX(maxJ + 1);
-        HEIGHT = countY(maxI + 2);
-        cancel = new Button();
-        rootList.add(cancel);
-        cancel.setOnAction(this);
-        cancel.setText("CLEAR");
-        double canlX = (WIDTH - cancel.getWidth()) / 2;
+        HEIGHT = countY(maxI + 3);
+        clear = new Button();
+        rootList.add(clear);
+        clear.setOnAction(event -> clear());
+        clear.setText("CLEAR");
+        double canlX = (WIDTH - clear.getWidth()) / 2;
         double canlY = countY(maxI + 1);
 
-        cancel.setLayoutX(canlX);
-        cancel.setLayoutY(canlY);
+        clear.setLayoutX(delta);
+        clear.setLayoutY(canlY);
+        back = new Button("BACK");
+        back.setLayoutX(canlX);
+        back.setLayoutY(canlY);
+        back.setOnAction(event -> back());
+        rootList.add(back);
         stage.setHeight(HEIGHT);
         stage.setWidth(WIDTH);
 
     }
+
 
     private void preComputing(int n) {
         map = new Letter[n][n];
@@ -155,8 +166,7 @@ public class LetterMap implements OnLetterListener, EventHandler<ActionEvent>, L
         failed = true;
     }
 
-    @Override
-    public void handle(ActionEvent event) {
+    private void clear() {
         fail();
         failed = false;
         for (Letter letter : chosen) {
@@ -165,13 +175,28 @@ public class LetterMap implements OnLetterListener, EventHandler<ActionEvent>, L
         chosen.clear();
     }
 
+
     @Override
     public void clearScreen() {
-        rootList.remove(cancel);
+        rootList.remove(clear);
+        rootList.remove(back);
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[i].length; j++) {
                 map[i][j].finalize();
             }
+        }
+    }
+
+    private void back() {
+        Main.setLmScreen(new LevelsScreen(Main.SIZE, rootList, stage));
+    }
+
+    @Override
+    public void handle(KeyEvent event) {
+        if (event.getCode() == KeyCode.BACK_SPACE) {
+            clear();
+        } else if (event.getCode() == KeyCode.ESCAPE){
+            back();
         }
     }
 }

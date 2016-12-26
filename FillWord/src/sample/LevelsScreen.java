@@ -9,11 +9,12 @@ import java.io.File;
 import java.util.List;
 
 import static sample.Main.SIZE;
+import static sample.Main.root;
 
 /**
  * Created by Максим on 24.12.2016.
  */
-public class LevelsScreen implements LMScreen, EventHandler<ActionEvent> {
+public class LevelsScreen implements LMScreen {
     private double width;
     private double height;
     private List rootList;
@@ -60,7 +61,8 @@ public class LevelsScreen implements LMScreen, EventHandler<ActionEvent> {
         openBuilder.setLayoutX(width / 2);
         openBuilder.setLayoutY(countX(maxI + 1));
         openBuilder.setText("BUILDER");
-        openBuilder.setOnAction(this);
+        openBuilder.setOnAction(event -> Main.setLmScreen(new BuilderMapScreen(Main.SIZE, rootList, stage, Main.root)));
+        rootList.add(openBuilder);
     }
 
 
@@ -81,8 +83,4 @@ public class LevelsScreen implements LMScreen, EventHandler<ActionEvent> {
         rootList.remove(openBuilder);
     }
 
-    @Override
-    public void handle(ActionEvent event) {
-
-    }
 }

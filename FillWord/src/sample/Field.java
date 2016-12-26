@@ -69,7 +69,7 @@ public class Field {
         empty = new Color(.4,.4,.4,1);
         chosen = Color.CORAL;
         confirmed = Color.WHEAT;
-        inputted = Color.BLANCHEDALMOND;
+        inputted = Color.CYAN;
         this.i = i;
         this.j = j;
         this.x = x;
